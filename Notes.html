@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Professional Notes Section</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+   <link rel="stylesheet" href="Notes.css">
+</head>
+<body>
+
+      <header class="navbar">
+        <div class="logo">Skill Scratch</div>
+        <nav>
+            <a href="skillscratch.html"><i class="fas fa-home"></i> Home</a>
+            <a href="video.html"><i class="fas fa-video"></i> Videos</a>
+            <a href="Notes.html" class="active"><i class="fas fa-file-alt"></i> Notes</a>
+        </nav>
+    </header>
+
+    <section id="notes-section">
+        <div class="notes-header">
+            <div class="header-content">
+                <h1 class="section-title">Knowledge Center</h1>
+                <p class="section-subtitle">Premium learning resources at your fingertips</p>
+            </div>
+            <div class="search-filter">
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Search notes..." id="search-input">
+                </div>
+                <select class="category-filter" id="category-filter">
+                    <option value="all">All Categories</option>
+                    <option value="web">Web Development</option>
+                    <option value="programming">Programming</option>
+                    <option value="design">Design</option>
+                    <option value="business">Business</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="notes-grid" id="notes-grid">
+            <!-- Notes will be inserted here by JavaScript -->
+        </div>
+
+        <div class="pagination-controls">
+            <button class="pagination-btn prev" id="prev-btn" disabled><i class="fas fa-chevron-left"></i> Previous</button>
+            <div class="page-numbers" id="page-numbers">
+                <span class="page-number active" data-page="1">1</span>
+                <span class="page-number" data-page="2">2</span>
+                <span class="page-number" data-page="3">3</span>
+                <span class="page-number" data-page="4">4</span>
+            </div>
+            <button class="pagination-btn next" id="next-btn">Next <i class="fas fa-chevron-right"></i></button>
+        </div>
+    </section>
+
+    <script>
+        // Sample Note Data (32 notes)
+        const allNotes = [
+            // Web Development Notes (8)
+            ...Array.from({length: 8}, (_, i) => createNote(i+1, 'web', 'Web Development')),
+            // Programming Notes (8)
+            ...Array.from({length: 8}, (_, i) => createNote(i+9, 'programming', 'Programming')),
+            // Design Notes (8)
+            ...Array.from({length: 8}, (_, i) => createNote(i+17, 'design', 'Design')),
+            // Business Notes (8)
+            ...Array.from({length: 8}, (_, i) => createNote(i+25, 'business', 'Business'))
+        ];
+
+        function createNote(id, category, categoryName) {
+            return {
+                id,
+                title: `${categoryName} Note ${id}`,
+                excerpt: `This comprehensive note covers essential ${categoryName.toLowerCase()} concepts and practical examples to enhance your skills.`,
+                category,
+                pages: Math.floor(Math.random() * 15) + 5,
+                updated: new Date(Date.now() - Math.random() * 30 * 24 * 60 * 60 * 1000).toLocaleDateString(),
+                bookmarked: false
+            };
+        }
+
+        // DOM Elements
+        const notesGrid = document.getElementById('notes-grid');
+        const pageNumbers = document.querySelectorAll('.page-number');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const searchInput = document.getElementById('search-input');
+        const categoryFilter = document.getElementById('category-filter');
+
+        // State
+        let currentPage = 1;
+        const notesPerPage = 8;
+        let filteredNotes = [...allNotes];
+
+        // Initialize
+        renderNotes();
+        setupEventListeners();
+
+        // Render notes for current page
+        function renderNotes() {
+            const startIdx = (currentPage - 1) * notesPerPage;
+            const endIdx = startIdx + notesPerPage;
+            const notesToShow = filteredNotes.slice(startIdx, endIdx);
+            
+            notesGrid.innerHTML = notesToShow.map(note => `
+                <div class="note-card" data-category="${note.category}">
+                    <div class="card-header">
+                        <span class="category-badge ${note.category}">
+                            ${note.category.toUpperCase().substring(0,4)}
+                        </span>
+                        <div class="card-actions">
+                            <button class="action-btn bookmark ${note.bookmarked ? 'active' : ''}" 
+                                    onclick="toggleBookmark(${note.id})">
+                                <i class="${note.bookmarked ? 'fas' : 'far'} fa-bookmark"></i>
+                            </button>
+                            <button class="action-btn share">
+                                <i class="fas fa-share-alt"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <h3 class="note-title">${note.title}</h3>
+                        <p class="note-excerpt">${note.excerpt}</p>
+                        <div class="meta-info">
+                            <span><i class="far fa-file-alt"></i> ${note.pages} pages</span>
+                            <span><i class="far fa-calendar-alt"></i> ${note.updated}</span>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <button class="btn preview-btn"><i class="fas fa-eye"></i> Preview</button>
+                        <button class="btn download-btn"><i class="fas fa-download"></i> Download</button>
+                    </div>
+                </div>
+            `).join('');
+            
+            // Update active page in pagination
+            updatePagination();
+        }
+
+        // Update pagination state
+        function updatePagination() {
+            pageNumbers.forEach(page => {
+                page.classList.toggle('active', parseInt(page.dataset.page) === currentPage);
+            });
+            
+            // Update button states
+            prevBtn.disabled = currentPage === 1;
+            nextBtn.disabled = currentPage === Math.ceil(filteredNotes.length / notesPerPage);
+        }
+
+        // Setup event listeners
+        function setupEventListeners() {
+            // Page number clicks
+            pageNumbers.forEach(page => {
+                page.addEventListener('click', () => {
+                    currentPage = parseInt(page.dataset.page);
+                    renderNotes();
+                });
+            });
+            
+            // Previous button
+            prevBtn.addEventListener('click', () => {
+                if (currentPage > 1) {
+                    currentPage--;
+                    renderNotes();
+                }
+            });
+            
+            // Next button
+            nextBtn.addEventListener('click', () => {
+                if (currentPage < Math.ceil(filteredNotes.length / notesPerPage)) {
+                    currentPage++;
+                    renderNotes();
+                }
+            });
+
+            // Search input
+            searchInput.addEventListener('input', () => {
+                applyFilters();
+            });
+
+            // Category filter
+            categoryFilter.addEventListener('change', () => {
+                applyFilters();
+            });
+        }
+
+        // Apply search and category filters
+        function applyFilters() {
+            const searchTerm = searchInput.value.toLowerCase();
+            const selectedCategory = categoryFilter.value;
+            
+            filteredNotes = allNotes.filter(note => {
+                const matchesSearch = note.title.toLowerCase().includes(searchTerm) || 
+                                     note.excerpt.toLowerCase().includes(searchTerm);
+                const matchesCategory = selectedCategory === 'all' || note.category === selectedCategory;
+                
+                return matchesSearch && matchesCategory;
+            });
+            
+            currentPage = 1;
+            renderNotes();
+        }
+
+        // Toggle bookmark (global function)
+        window.toggleBookmark = function(noteId) {
+            const noteIndex = allNotes.findIndex(note => note.id === noteId);
+            if (noteIndex !== -1) {
+                allNotes[noteIndex].bookmarked = !allNotes[noteIndex].bookmarked;
+                renderNotes();
+            }
+        };
+    </script>
+</body>
+</html>

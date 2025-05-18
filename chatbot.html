@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Course Bot – 100 Courses</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<link rel="stylesheet" href="chatbot.css">
+
+<body class="bg-gray-100 min-h-screen flex items-center justify-center p-4">
+  
+  
+  
+  <div class="bg-white w-full max-w-2xl p-6 rounded-xl shadow-xl space-y-4">
+    <h1 class="text-2xl font-bold text-center text-orange-600">Course Bot 🤖</h1>
+    <header class="navbar">
+      <div class="logo">Skill Scratch</div>
+      <nav>
+          <a href="skillscratch.html"><i class="fas fa-home"></i> Home</a>
+          <a href="video.html" class="active"><i class="fas fa-video"></i> Video</a>
+          <a href="Notes.html" ><i class="fas fa-file-alt"></i> Notes</a>
+      </nav>
+    </header>
+    
+    <div id="chatbox" class="h-96 overflow-y-auto bg-gray-50 p-4 rounded-md space-y-2 border border-gray-200 text-sm">
+      <div class="p-3 bg-orange-100 rounded-lg shadow">Hi! 👋 I'm your course assistant. Ask about any course (e.g., "Python", "AI", "Blockchain").</div>
+    </div>
+
+
+
+    
+    <div class="flex gap-2">
+      <input type="text" id="userInput" placeholder="Ask about a course..." class="flex-1 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500" />
+      <button onclick="sendMessage()" class="bg-orange-600 text-white px-4 py-2 rounded-md hover:bg-orange-700">Send</button>
+    </div>
+  </div>
+  
+
+
+  <script>
+    const courseDetails = {
+      "python": "Python Programming: Covers syntax, data structures, OOP, web scraping, and automation projects.",
+      "web development": "Web Dev: HTML, CSS, JS, Bootstrap, React, and full-stack fundamentals.",
+      "data science": "Data Science: Python, Pandas, NumPy, Machine Learning, Visualization, and real-world projects.",
+      "machine learning": "ML: Linear regression, classification, decision trees, scikit-learn, TensorFlow basics.",
+      "ai": "Artificial Intelligence: Covers neural networks, NLP, computer vision, and deep learning.",
+      "cybersecurity": "Cybersecurity: Network security, ethical hacking, cryptography, and threat modeling.",
+      "blockchain": "Blockchain: Bitcoin, Ethereum, Solidity smart contracts, and decentralized apps.",
+      "cloud computing": "Cloud Computing: AWS, Azure, GCP, cloud storage, services, and deployments.",
+      "java": "Java: OOP principles, GUI apps, servlets, JDBC, and backend development.",
+      "javascript": "JavaScript: DOM manipulation, events, ES6+, async programming, and frameworks.",
+      "react": "React: Components, JSX, hooks, routing, and state management with Redux.",
+      "angular": "Angular: TypeScript, components, directives, RxJS, and dependency injection.",
+      "node.js": "Node.js: Backend dev with Express.js, middleware, APIs, and MongoDB integration.",
+      "c++": "C++: Memory management, OOP, STL, pointers, and algorithm implementations.",
+      "c#": "C#: .NET framework, desktop apps, Unity for game development.",
+      "sql": "SQL: Queries, joins, indexes, transactions, and database design.",
+      "mongodb": "MongoDB: NoSQL basics, collections, CRUD operations, aggregation, and indexing.",
+      "flutter": "Flutter: Cross-platform mobile apps using Dart, widgets, state management.",
+      "kotlin": "Kotlin: Android development, coroutines, Jetpack, and MVVM architecture.",
+      "android": "Android: UI/UX, intents, services, databases, APIs, and publishing apps.",
+      "ios": "iOS: Swift, Xcode, UIKit, CoreData, and App Store deployment.",
+      "swift": "Swift: iOS app development, syntax, protocols, and UI frameworks.",
+      "unity": "Unity: Game dev, C# scripting, physics, and 2D/3D engines.",
+      "r": "R: Statistical computing, ggplot2, modeling, and data wrangling.",
+      "excel": "Excel: Functions, pivot tables, charts, macros, and automation.",
+      "power bi": "Power BI: Dashboards, DAX, Power Query, and data modeling.",
+      "tableau": "Tableau: Data visualization, maps, dashboards, and storytelling.",
+      "ethical hacking": "Ethical Hacking: Pen testing, WiFi hacks, Metasploit, and bug bounty hunting.",
+      "devops": "DevOps: CI/CD, Jenkins, Docker, Kubernetes, and monitoring.",
+      "docker": "Docker: Containers, volumes, images, Dockerfiles, and orchestration.",
+      "kubernetes": "Kubernetes: Pods, clusters, deployments, Helm, and autoscaling.",
+      "git": "Git: Version control, branching, merging, GitHub collaboration.",
+      "typescript": "TypeScript: Strongly-typed JS, interfaces, and large-scale app development.",
+      "html": "HTML: Semantic structure, forms, media, and accessibility.",
+      "css": "CSS: Flexbox, Grid, animations, responsive design, and preprocessors.",
+      "bootstrap": "Bootstrap: CSS framework, responsive layouts, and components.",
+      "tailwind": "Tailwind CSS: Utility-first styling, custom themes, and responsive design.",
+      "api development": "API Dev: RESTful APIs, authentication, rate-limiting, and JSON handling.",
+      "graphql": "GraphQL: Query language, Apollo Server, and efficient data fetching.",
+      "project management": "Project Management: Agile, Scrum, Kanban, Jira, and planning tools.",
+      "ui/ux design": "UI/UX: Design thinking, wireframes, user flows, and Figma/Adobe XD.",
+      "figma": "Figma: Prototyping, collaboration, design systems, and UI kits.",
+      "adobe xd": "Adobe XD: UI design, prototyping, animation, and team collaboration.",
+      "photoshop": "Photoshop: Photo editing, retouching, digital art, and layer masks.",
+      "illustrator": "Illustrator: Vector design, typography, branding, and illustrations.",
+      "after effects": "After Effects: Motion graphics, video editing, and animation techniques.",
+      "premiere pro": "Premiere Pro: Video cutting, color grading, effects, and transitions.",
+      "seo": "SEO: On-page, off-page, technical SEO, and keyword research.",
+      "digital marketing": "Digital Marketing: SEO, SEM, social media, and email campaigns.",
+      "content writing": "Content Writing: Blogging, copywriting, SEO content, and storytelling.",
+      "excel automation": "Excel Automation: Macros, VBA scripting, and repetitive task optimization.",
+      "networking": "Networking: OSI model, IP/TCP, routing, switches, and troubleshooting.",
+      "linux": "Linux: Shell scripting, permissions, file systems, and administration.",
+      "windows server": "Windows Server: AD, DNS, DHCP, roles, and group policies.",
+      "salesforce": "Salesforce: CRM basics, automation, and Lightning apps.",
+      "sap": "SAP: ERP modules, finance, inventory, and SAP FICO/ABAP basics.",
+      "finance": "Finance: Budgeting, forecasting, ratios, and investment analysis.",
+      "stock market": "Stock Market: Investing, technical analysis, portfolios, and trading tools.",
+      "business analytics": "Business Analytics: Data interpretation, dashboards, KPIs, and tools.",
+      "matlab": "MATLAB: Matrix operations, simulations, and engineering computations.",
+      "autocad": "AutoCAD: 2D/3D drawing, layers, architecture, and blueprints.",
+      "solidworks": "SolidWorks: 3D CAD modeling, assemblies, and engineering design.",
+      "robotics": "Robotics: Arduino, sensors, motion, and automation control.",
+      "arduino": "Arduino: Microcontroller coding, sensors, circuits, and IoT projects.",
+      "raspberry pi": "Raspberry Pi: Linux setup, GPIO, projects, and sensors.",
+      "iot": "IoT: Sensors, microcontrollers, connectivity, and cloud integration.",
+      "quantum computing": "Quantum Computing: Qubits, gates, and quantum algorithms (intro level).",
+      "bioinformatics": "Bioinformatics: DNA sequencing, tools, databases, and analysis.",
+      "genetics": "Genetics: Inheritance, mutations, gene editing, and biotech.",
+      "english speaking": "English Speaking: Vocabulary, pronunciation, grammar, and fluency.",
+      "public speaking": "Public Speaking: Confidence building, pitch delivery, and persuasion.",
+      "personality dev": "Personality Dev: Confidence, communication, grooming, and habits.",
+      "career guidance": "Career Guidance: Career mapping, interview prep, and resume tips.",
+      "resume building": "Resume Building: Formats, customization, and keywords for ATS.",
+      "interview skills": "Interview Skills: STAR method, body language, and mock Q&A.",
+      "freelancing": "Freelancing: Platforms, client handling, portfolios, and income tips.",
+      "entrepreneurship": "Entrepreneurship: Ideation, MVPs, funding, and growth strategies.",
+      "startup": "Startup: Product-market fit, marketing, pitch decks, and fundraising.",
+      "app development": "App Dev: Frontend & backend, React Native, databases, and APIs.",
+      "game development": "Game Dev: Game loop, Unity/Unreal, graphics, and publishing.",
+      "vr/ar": "VR/AR: 3D environments, Unity, Oculus, and interactive storytelling.",
+      "english grammar": "English Grammar: Tenses, clauses, modals, and sentence correction.",
+      "creative writing": "Creative Writing: Poetry, fiction, prompts, and editing.",
+      "technical writing": "Technical Writing: Documentation, manuals, and structured writing.",
+      "legal writing": "Legal Writing: Contracts, briefs, and citation formats.",
+      "data engineering": "Data Engineering: Pipelines, ETL, Spark, and data lakes.",
+      "big data": "Big Data: Hadoop, Spark, Hive, and distributed systems.",
+      "nlp": "NLP: Tokenization, sentiment analysis, BERT, and chatbots.",
+      "computer vision": "Computer Vision: OpenCV, object detection, face recognition.",
+      "tensorflow": "TensorFlow: Tensors, Keras API, neural networks.",
+      "pytorch": "PyTorch: Tensors, autograd, and deep learning pipelines.",
+      "react native": "React Native: Mobile app dev for iOS/Android with one codebase.",
+      "open source": "Open Source: GitHub contributions, licenses, and community involvement.",
+      "career switch": "Career Switch: Transition plans, skill gaps, and roadmap design.",
+      "english for job": "English for Jobs: Emails, meetings, formal language, and etiquette.",
+      "email writing": "Email Writing: Subject lines, clarity, tone, and professionalism.",
+      "ms office": "MS Office: Word, Excel, PowerPoint tips for productivity.",
+      "typing speed": "saif ali Khan kerpa.",
+    };
+
+    function sendMessage() {
+      const input = document.getElementById("userInput");
+      const message = input.value.trim();
+      if (!message) return;
+
+      appendMessage(message, "user");
+      input.value = "";
+
+      const key = Object.keys(courseDetails).find(k => message.toLowerCase().includes(k));
+      const reply = key ? courseDetails[key] : "Sorry, I don’t have information on that course. Try keywords like 'Python', 'AI', or 'Blockchain'.";
+      setTimeout(() => appendMessage(reply, "bot"), 500);
+    }
+
+    function appendMessage(text, sender) {
+      const chatbox = document.getElementById("chatbox");
+      const div = document.createElement("div");
+      div.className = `p-3 rounded-lg shadow ${sender === 'user' ? 'bg-blue-100 text-blue-800 self-end' : 'bg-orange-100 text-orange-800'}`;
+      div.textContent = text;
+      chatbox.appendChild(div);
+      chatbox.scrollTop = chatbox.scrollHeight;
+    }
+  </script>
+</body>
+</html>

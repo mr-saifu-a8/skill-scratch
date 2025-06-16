@@ -173,3 +173,56 @@ function closeGame(gameType) {
   document.getElementById(gameType + '-game').style.display = 'none';
   document.getElementById(gameType + '-card').style.display = 'block';
 }
+
+
+
+
+
+
+  const cursor = document.querySelector(".dot-cursor");
+
+  let mouseX = 0;
+  let mouseY = 0;
+  let currentX = 0;
+  let currentY = 0;
+  const speed = 0.05; // kam value = zyada lag
+
+  // Mouse position track
+  document.addEventListener("mousemove", (e) => {
+    mouseX = e.clientX;
+    mouseY = e.clientY;
+  });
+
+  // Animate cursor dot with delay
+  function animateCursor() {
+    const dx = mouseX - currentX;
+    const dy = mouseY - currentY;
+
+    currentX += dx * speed;
+    currentY += dy * speed;
+
+    cursor.style.left = currentX + "px";
+    cursor.style.top = currentY + "px";
+
+    requestAnimationFrame(animateCursor);
+  }
+
+  animateCursor();
+
+  // Links & interactive elements
+  const targets = document.querySelectorAll("a, button, .hover-target");
+
+  targets.forEach((el) => {
+    el.addEventListener("mouseenter", () => {
+      cursor.style.transform = "scale(5)";
+      cursor.style.backgroundColor = "white";
+      cursor.style.mixBlendMode = "difference";
+    });
+
+    el.addEventListener("mouseleave", () => {
+      cursor.style.transform = "scale(1)";
+      cursor.style.backgroundColor = "black";
+      cursor.style.mixBlendMode = "normal";
+    });
+  });
+

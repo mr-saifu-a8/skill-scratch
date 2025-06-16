@@ -1361,13 +1361,11 @@ top{
 
 
 
-
-
 .dot-cursor {
   position: fixed;
   width: 12px;
   height: 12px;
-  background-color: purple;
+  background-color: black;
   border-radius: 50%;
   pointer-events: none;
   z-index: 9999;

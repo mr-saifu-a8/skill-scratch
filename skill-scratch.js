@@ -229,32 +229,32 @@ function closeGame(gameType) {
 
 
 
-
 const speeds = [0.4, 0.7, 0.8, 0.2];
 
+for (let col = 1; col <= 4; col++) {
+  const container = document.getElementById(`col${col}`);
+  for (let i = 1; i <= 6; i++) {
+    const img = document.createElement('img');
+    img.src = `https://picsum.photos/id/${col * 10 + i}/500/750`; // test images
+    img.alt = `Image ${(col - 1) * 6 + i}`;
+    container.appendChild(img);
+  }
+}
 
-    for (let col = 1; col <= 4; col++) {
-      const container = document.getElementById(`col${col}`);
-      for (let i = 1; i <= 6; i++) {
-        const img = document.createElement('img');
-        img.src = `images/${(col - 1) * 6 + i}.jpg`;
-        img.alt = `Image ${(col - 1) * 6 + i}`;
-        container.appendChild(img);
-      }
-    }
+window.addEventListener("DOMContentLoaded", () => {
+  const imageTracks = document.querySelectorAll('.image-track');
+  let currentScroll = 0;
 
-    const imageTracks = document.querySelectorAll('.image-track');
-    let currentScroll = 0;
+  function animate() {
+    const scrollY = window.scrollY;
+    currentScroll += (scrollY - currentScroll) * 0.05;
 
-    function animate() {
-      const scrollY = window.scrollY;
-      currentScroll += (scrollY - currentScroll) * 0.05; // smoother and slower
+    imageTracks.forEach((track, index) => {
+      track.style.transform = `translateY(-${currentScroll * speeds[index]}px)`;
+    });
 
-      imageTracks.forEach((track, index) => {
-        track.style.transform = `translateY(-${currentScroll * speeds[index]}px)`;
-      });
+    requestAnimationFrame(animate);
+  }
 
-      requestAnimationFrame(animate);
-    }
-
-    animate();
+  animate();
+});

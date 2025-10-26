@@ -284,7 +284,6 @@ html,body{
   border-radius: 100px;
   border: 2px solid white;
 
-
 }
 
 .img3{
@@ -1222,6 +1221,7 @@ top{
 /* Section Title */
 .section-title {
   text-align: center;
+  padding-top: 2rem;
   font-size: 36px;
   font-weight: 700;
   color: #00bcd4;

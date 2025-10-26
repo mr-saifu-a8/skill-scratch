@@ -1,87 +1,143 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Register - Fix Your City</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class=" flex items-center justify-center min-h-screen">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Register - Fix Your City</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body class="flex items-center justify-center min-h-screen">
+    <div class="bg-white p-8 rounded-xl shadow-md w-full max-w-md space-y-6">
+      <h2 class="text-3xl font-bold text-center text-orange-600">Register</h2>
 
-  <div class="bg-white p-8 rounded-xl shadow-md w-full max-w-md space-y-6">
-    <h2 class="text-3xl font-bold text-center text-orange-600">Register</h2>
+      <input
+        type="text"
+        id="name"
+        placeholder="Full Name"
+        class="w-full border p-3 rounded-md"
+        required
+      />
+      <input
+        type="email"
+        id="email"
+        placeholder="Email"
+        class="w-full border p-3 rounded-md"
+        required
+      />
 
-    <input type="text" id="name" placeholder="Full Name" class="w-full border p-3 rounded-md" required>
-    <input type="email" id="email" placeholder="Email" class="w-full border p-3 rounded-md" required>
+      <input
+        type="tel"
+        id="phone"
+        placeholder="Phone Number (10 digits)"
+        maxlength="10"
+        class="w-full border p-3 rounded-md"
+        required
+      />
 
-    <input type="tel" id="phone" placeholder="Phone Number (10 digits)" maxlength="10" class="w-full border p-3 rounded-md" required>
+      <select
+        id="sex"
+        class="w-full border p-3 rounded-md text-gray-700"
+        required
+      >
+        <option value="">Gender</option>
+        <option value="Male">Male</option>
+        <option value="Female">Female</option>
+        <option value="Other">Other</option>
+      </select>
 
-    <select id="sex" class="w-full border p-3 rounded-md text-gray-700" required>
-      <option value="">Gender</option>
-      <option value="Male">Male</option>
-      <option value="Female">Female</option>
-      <option value="Other">Other</option>
-    </select>
+      <div class="relative">
+        <input
+          type="password"
+          id="password"
+          placeholder="Password"
+          class="w-full border p-3 rounded-md"
+          required
+        />
+        <span
+          onclick="toggleVisibility('password')"
+          class="absolute right-3 top-3 cursor-pointer text-sm text-orange-600"
+          >Show</span
+        >
+      </div>
 
-    <div class="relative">
-      <input type="password" id="password" placeholder="Password" class="w-full border p-3 rounded-md" required>
-      <span onclick="toggleVisibility('password')" class="absolute right-3 top-3 cursor-pointer text-sm text-orange-600">Show</span>
+      <div class="relative">
+        <input
+          type="password"
+          id="confirmPassword"
+          placeholder="Confirm Password"
+          class="w-full border p-3 rounded-md"
+          required
+        />
+        <span
+          onclick="toggleVisibility('confirmPassword')"
+          class="absolute right-3 top-3 cursor-pointer text-sm text-orange-600"
+          >Show</span
+        >
+      </div>
+
+      <button
+        onclick="register()"
+        class="w-full bg-orange-600 text-white py-3 rounded-md hover:bg-orange-700"
+      >
+        Register
+      </button>
+
+      <p class="text-center text-sm">
+        Already have an account?
+        <a href="login.html" class="text-orange-500 hover:underline">Login</a>
+      </p>
     </div>
 
-    <div class="relative">
-      <input type="password" id="confirmPassword" placeholder="Confirm Password" class="w-full border p-3 rounded-md" required>
-      <span onclick="toggleVisibility('confirmPassword')" class="absolute right-3 top-3 cursor-pointer text-sm text-orange-600">Show</span>
-    </div>
-
-    <button onclick="register()" class="w-full bg-orange-600 text-white py-3 rounded-md hover:bg-orange-700">Register</button>
-
-    <p class="text-center text-sm">Already have an account? 
-      <a href="login.html" class="text-orange-500 hover:underline">Login</a>
-    </p>
-  </div>
-
-  <script>
-    function toggleVisibility(id) {
-      const field = document.getElementById(id);
-      const span = field.nextElementSibling;
-      if (field.type === "password") {
-        field.type = "text";
-        span.textContent = "Hide";
-      } else {
-        field.type = "password";
-        span.textContent = "Show";
-      }
-    }
-
-    function register() {
-      const name = document.getElementById('name').value.trim();
-      const email = document.getElementById('email').value.trim();
-      const phone = document.getElementById('phone').value.trim();
-      const sex = document.getElementById('Gender').value;
-      const password = document.getElementById('password').value;
-      const confirmPassword = document.getElementById('confirmPassword').value;
-
-      if (!name || !email || !phone || !sex || !password || !confirmPassword) {
-        alert("Please fill all fields!");
-        return;
+    <script>
+      function toggleVisibility(id) {
+        const field = document.getElementById(id);
+        const span = field.nextElementSibling;
+        if (field.type === "password") {
+          field.type = "text";
+          span.textContent = "Hide";
+        } else {
+          field.type = "password";
+          span.textContent = "Show";
+        }
       }
 
-      if (!/^\d{10}$/.test(phone)) {
-        alert("Phone number must be exactly 10 digits.");
-        return;
+      function register() {
+        const name = document.getElementById("name").value.trim();
+        const email = document.getElementById("email").value.trim();
+        const phone = document.getElementById("phone").value.trim();
+        const sex = document.getElementById("Gender").value;
+        const password = document.getElementById("password").value;
+        const confirmPassword =
+          document.getElementById("confirmPassword").value;
+
+        if (
+          !name ||
+          !email ||
+          !phone ||
+          !sex ||
+          !password ||
+          !confirmPassword
+        ) {
+          alert("Please fill all fields!");
+          return;
+        }
+
+        if (!/^\d{10}$/.test(phone)) {
+          alert("Phone number must be exactly 10 digits.");
+          return;
+        }
+
+        if (password !== confirmPassword) {
+          alert("Passwords do not match!");
+          return;
+        }
+
+        const user = { name, email, phone, sex, password };
+        localStorage.setItem("user", JSON.stringify(user));
+
+        alert("Registered Successfully! Please Login.");
+        window.location.href = "login.html";
       }
-
-      if (password !== confirmPassword) {
-        alert("Passwords do not match!");
-        return;
-      }
-
-      const user = { name, email, phone, sex, password };
-      localStorage.setItem('user', JSON.stringify(user));
-
-      alert("Registered Successfully! Please Login.");
-      window.location.href = 'login.html';
-    }
-  </script>
-</body>
+    </script>
+  </body>
 </html>
